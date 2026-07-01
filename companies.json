@@ -1,0 +1,14 @@
+{
+  "greenhouse": [
+    { "slug": "monday", "company": "monday.com" },
+    { "slug": "wix", "company": "Wix" },
+    { "slug": "lemonade", "company": "Lemonade" },
+    { "slug": "riskified", "company": "Riskified" },
+    { "slug": "similarweb", "company": "Similarweb" },
+    { "slug": "melio", "company": "Melio" }
+  ],
+  "lever": [
+    { "slug": "fireblocks", "company": "Fireblocks" }
+  ],
+  "comeet": []
+}
