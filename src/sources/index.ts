@@ -2,6 +2,8 @@ import { readFileSync } from "node:fs";
 import type { RawJob } from "../types.js";
 import { fetchGreenhouse } from "./greenhouse.js";
 import { fetchLever } from "./lever.js";
+import { fetchDrushim } from "./drushim.js";
+import { fetchAllJobs } from "./alljobs.js";
 
 export interface Source {
   name: string;
@@ -25,5 +27,7 @@ export function buildSources(): Source[] {
       name: `lever:${c.slug}`,
       fetchJobs: () => fetchLever(c.slug, c.company),
     })),
+    { name: "drushim", fetchJobs: fetchDrushim },
+    { name: "alljobs", fetchJobs: fetchAllJobs },
   ];
 }
