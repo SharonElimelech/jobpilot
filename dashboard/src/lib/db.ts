@@ -27,6 +27,23 @@ export interface JobRow {
   applied_at: string | null;
 }
 
+export async function getJob(url: string): Promise<(JobRow & { description: string }) | null> {
+  const { data, error } = await supabase().from("jobs").select("*").eq("url", url).maybeSingle();
+  if (error) throw new Error(error.message);
+  return data;
+}
+
+export async function getKit(url: string): Promise<string | null> {
+  const { data, error } = await supabase().from("apply_kits").select("kit_md").eq("url", url).maybeSingle();
+  if (error) throw new Error(error.message);
+  return data?.kit_md ?? null;
+}
+
+export async function saveKit(url: string, kitMd: string): Promise<void> {
+  const { error } = await supabase().from("apply_kits").upsert({ url, kit_md: kitMd });
+  if (error) throw new Error(error.message);
+}
+
 export async function getJobs(): Promise<JobRow[]> {
   const { data, error } = await supabase()
     .from("jobs")

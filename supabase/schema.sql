@@ -15,11 +15,29 @@ create table if not exists jobs (
   missing_skills jsonb,
   ghost_flag boolean not null default false,
   app_status text,
-  applied_at timestamptz
+  applied_at timestamptz,
+  followup_sent boolean not null default false
 );
 
 create index if not exists jobs_content_hash_idx on jobs (content_hash);
 create index if not exists jobs_score_idx on jobs (score);
+
+create table if not exists apply_kits (
+  url text primary key references jobs(url) on delete cascade,
+  kit_md text not null,
+  created_at timestamptz not null default now()
+);
+
+create table if not exists mock_interviews (
+  chat_id text primary key,
+  job_url text not null,
+  job_title text not null,
+  questions jsonb not null,
+  current int not null default 0,
+  transcript jsonb not null default '[]',
+  active boolean not null default true,
+  updated_at timestamptz not null default now()
+);
 
 create table if not exists scan_runs (
   id uuid primary key default gen_random_uuid(),

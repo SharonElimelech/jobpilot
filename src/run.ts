@@ -5,6 +5,7 @@ import { scoreJob } from "./score.js";
 import { formatAlert, sendTelegram } from "./notify.js";
 import {
   getExistingByUrls, insertJob, touchJob, saveScore, getUnscored, logRun,
+  getStaleApplications, markFollowupSent,
 } from "./db.js";
 import type { NormalizedJob, RawJob } from "./types.js";
 
@@ -72,6 +73,16 @@ async function main() {
     } catch (e) {
       console.error(`scoring failed for ${row.url}: ${e}`); // stays unscored, retried next run
     }
+  }
+
+  // follow-up nudges: applied 7+ days ago, still no answer → one reminder
+  for (const row of await getStaleApplications()) {
+    await sendTelegram(
+      `⏰ <b>זמן פולו-אפ!</b>\nהגשת ל-<b>${row.title}</b> @ ${row.company} לפני שבוע+ בלי תשובה.\n` +
+      `שווה לשלוח מייל קצר או הודעה למגייס/ת בלינקדאין — פולו-אפ מכפיל אחוזי תשובה.\n${row.url}`,
+    );
+    await markFollowupSent(row.url);
+    console.log(`followup nudge sent: ${row.title}`);
   }
 
   await logRun({

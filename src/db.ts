@@ -75,6 +75,23 @@ export async function getUnscored(limit = 40): Promise<JobRow[]> {
   return data as JobRow[];
 }
 
+export async function getStaleApplications(days = 7): Promise<JobRow[]> {
+  const cutoff = new Date(Date.now() - days * 86_400_000).toISOString();
+  const { data, error } = await supabase
+    .from("jobs")
+    .select("*")
+    .eq("app_status", "applied")
+    .eq("followup_sent", false)
+    .lt("applied_at", cutoff);
+  if (error) throw new Error(`db getStaleApplications: ${error.message}`);
+  return data as JobRow[];
+}
+
+export async function markFollowupSent(url: string): Promise<void> {
+  const { error } = await supabase.from("jobs").update({ followup_sent: true }).eq("url", url);
+  if (error) throw new Error(`db markFollowupSent: ${error.message}`);
+}
+
 export async function logRun(run: {
   started_at: string;
   finished_at: string;

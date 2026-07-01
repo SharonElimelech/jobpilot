@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState, useTransition } from "react";
 import type { JobRow } from "@/lib/db";
+import { toId } from "@/lib/id";
 import { setStatus } from "@/app/actions";
 
 type Filter = "all" | "hot" | "high" | "applied" | "ghost";
@@ -65,9 +67,10 @@ export default function JobBoard({ jobs }: { jobs: JobRow[] }) {
           <div className={`score ${scoreClass(j.score)}`}>{j.score ?? "—"}</div>
           <div>
             <div className="t">
-              <a href={j.url} target="_blank" rel="noreferrer">{j.title}</a>
+              <Link href={`/job/${toId(j.url)}`}>{j.title}</Link>
               {isHot(j) && <span className="badge">🔥</span>}
               {j.ghost_flag && <span className="badge">👻</span>}
+              <a href={j.url} target="_blank" rel="noreferrer" className="badge" style={{ color: "var(--dim)" }}>↗</a>
             </div>
             <div className="m">
               {[j.company, j.location, j.source].filter(Boolean).join(" · ")}

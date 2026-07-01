@@ -148,6 +148,18 @@ h1, h2 { font-family: var(--font-display), serif; font-weight: 400; letter-spaci
 .act.on-interview { background: rgba(255,180,84,0.12); border-color: var(--hot); color: var(--hot); }
 .act.on-rejected { background: rgba(255,107,122,0.1); border-color: var(--bad); color: var(--bad); }
 
+/* ── apply kit ── */
+.kit-body { font-size: 14.5px; line-height: 1.75; color: #b9cbda; }
+.kit-body h3 {
+  font-family: var(--font-display), serif; font-weight: 400; color: var(--acc);
+  font-size: 19px; margin: 22px 0 8px; border-bottom: 1px solid var(--line); padding-bottom: 5px;
+}
+.kit-body h4 { color: var(--text); font-size: 15.5px; margin: 14px 0 5px; }
+.kit-body p { margin: 7px 0; }
+.kit-body ul { margin: 6px 0 6px 0; padding-inline-start: 22px; }
+.kit-body li { margin: 3px 0; }
+.kit-body b { color: var(--text); }
+
 /* ── login ── */
 .login-wrap { min-height: 100vh; display: grid; place-items: center; }
 .login {

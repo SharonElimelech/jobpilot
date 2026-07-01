@@ -25,6 +25,17 @@ export async function login(
   redirect("/");
 }
 
+export async function generateApplyKit(url: string): Promise<void> {
+  const { getJob, saveKit } = await import("@/lib/db");
+  const { generateKit } = await import("@/lib/claude");
+  const job = await getJob(url);
+  if (!job) throw new Error("job not found");
+  const kit = await generateKit(job);
+  await saveKit(url, kit);
+  const { toId } = await import("@/lib/id");
+  revalidatePath(`/job/${toId(url)}`);
+}
+
 export async function setStatus(url: string, status: string | null) {
   const { error } = await supabase()
     .from("jobs")
