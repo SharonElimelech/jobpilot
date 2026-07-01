@@ -21,6 +21,7 @@ test("isRelevantTitle rejects senior roles", () => {
   assert.equal(isRelevantTitle("Senior Backend Engineer"), false);
   assert.equal(isRelevantTitle("Engineering Manager"), false);
   assert.equal(isRelevantTitle("Staff Software Engineer"), false);
+  assert.equal(isRelevantTitle("Frontend Team Leader"), false);
 });
 
 test("normalize trims fields and adds hash", () => {

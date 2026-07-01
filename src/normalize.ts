@@ -15,7 +15,7 @@ const RELEVANT = [
   /סטודנט/, /ג'וניור/, /מתכנת/, /מפתח/,
 ];
 const EXCLUDE = [
-  /senior/i, /\blead\b/i, /principal/i, /staff/i, /manager/i,
+  /senior/i, /\blead(er)?\b/i, /principal/i, /staff/i, /manager/i,
   /architect/i, /director/i, /בכיר/, /ראש צוות/,
 ];
 
