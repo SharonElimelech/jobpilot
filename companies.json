@@ -1,14 +1,18 @@
 {
   "greenhouse": [
-    { "slug": "monday", "company": "monday.com" },
-    { "slug": "wix", "company": "Wix" },
-    { "slug": "lemonade", "company": "Lemonade" },
     { "slug": "riskified", "company": "Riskified" },
+    { "slug": "forter", "company": "Forter" },
+    { "slug": "pagaya", "company": "Pagaya" },
+    { "slug": "appsflyer", "company": "AppsFlyer" },
+    { "slug": "bigid", "company": "BigID" },
     { "slug": "similarweb", "company": "Similarweb" },
-    { "slug": "melio", "company": "Melio" }
+    { "slug": "melio", "company": "Melio" },
+    { "slug": "taboola", "company": "Taboola" },
+    { "slug": "yotpo", "company": "Yotpo" },
+    { "slug": "jfrog", "company": "JFrog" },
+    { "slug": "axonius", "company": "Axonius" },
+    { "slug": "lightricks", "company": "Lightricks" }
   ],
-  "lever": [
-    { "slug": "fireblocks", "company": "Fireblocks" }
-  ],
+  "lever": [],
   "comeet": []
 }
