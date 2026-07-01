@@ -32,6 +32,10 @@ No server. Zero hosting cost. Every run is visible in the Actions log.
 
 TypeScript · Node.js · Claude API (Haiku, structured outputs) · Supabase Postgres · GitHub Actions cron · cheerio · built-in `node:test`
 
+## Dashboard (Phase 2)
+
+Password-protected Next.js dashboard on Vercel ([dashboard/](dashboard/)): scrollable jobs board with score/freshness/ghost filters, one-click application tracking (applied → interview → rejected), live **Skill Gap Radar** built from every scanned posting, and pipeline stats. Server components + server actions over the same Supabase — the service key never reaches the browser.
+
 ## Setup
 
 See [SETUP.md](SETUP.md) — Supabase project, Telegram bot via BotFather, five GitHub secrets. ~15 minutes.
