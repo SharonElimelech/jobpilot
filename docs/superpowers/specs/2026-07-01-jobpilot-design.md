@@ -20,7 +20,9 @@ integration, and production discipline (tests, CI, logging).
 - **Roles:** Student Software Developer, Junior Full-Stack, Junior Frontend,
   Junior Backend. Location: Israel center region, hybrid, or remote.
 - **Sources (v1):** Greenhouse boards API, Lever postings API, Comeet career
-  pages (curated list of Israeli companies), Drushim, AllJobs.
+  pages (curated list of Israeli companies), Drushim, AllJobs. The curated
+  company list lives in `companies.json` at the repo root (slug + platform
+  per company), editable without touching code.
 - **Excluded:** LinkedIn (aggressive anti-bot, ToS risk).
 
 ## Architecture (no server)
