@@ -13,7 +13,9 @@ create table if not exists jobs (
   score int,
   reasons jsonb,
   missing_skills jsonb,
-  ghost_flag boolean not null default false
+  ghost_flag boolean not null default false,
+  app_status text,
+  applied_at timestamptz
 );
 
 create index if not exists jobs_content_hash_idx on jobs (content_hash);
