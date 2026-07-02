@@ -19,7 +19,7 @@ export async function login(
     httpOnly: true,
     secure: true,
     sameSite: "lax",
-    maxAge: 60 * 60 * 24 * 30,
+    maxAge: 60 * 60 * 24 * 365, // ponytail: remember for a year, re-login only on password change
     path: "/",
   });
   redirect("/");

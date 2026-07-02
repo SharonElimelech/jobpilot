@@ -10,9 +10,10 @@ export default function LoginPage() {
       <form className="login" action={action}>
         <h1>JobPilot 🛩️</h1>
         <p>לוח בקרה אישי — הזן סיסמה</p>
-        <input type="password" name="password" placeholder="••••••••" autoFocus />
-        <button disabled={pending}>{pending ? "..." : "כניסה"}</button>
-        {state.error && <div className="err">{state.error}</div>}
+        <label htmlFor="pw">סיסמה</label>
+        <input id="pw" type="password" name="password" placeholder="••••••••" autoComplete="current-password" autoFocus />
+        <button disabled={pending}>{pending ? "מתחבר…" : "כניסה"}</button>
+        {state.error && <div className="err" role="alert">{state.error}</div>}
       </form>
     </div>
   );
