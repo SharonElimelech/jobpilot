@@ -14,7 +14,7 @@ export default function SkillRadar({ jobs }: { jobs: JobRow[] }) {
   const max = top[0][1];
 
   return (
-    <section className="panel">
+    <section className="panel" data-reveal>
       <h2>
         📡 Skill Gap Radar
         <span className="tag">מה השוק דורש ואין לך — לפי {jobs.length} משרות שנסרקו</span>

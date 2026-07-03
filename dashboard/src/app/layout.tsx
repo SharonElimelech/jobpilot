@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suez_One, Assistant, IBM_Plex_Mono } from "next/font/google";
+import ScrollReveal from "@/components/ScrollReveal";
 import "./globals.css";
 
 const display = Suez_One({ weight: "400", subsets: ["hebrew", "latin"], variable: "--font-display" });
@@ -14,7 +15,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="he" dir="rtl" className={`${display.variable} ${body.variable} ${mono.variable}`}>
-      <body>{children}</body>
+      <body>
+        <ScrollReveal />
+        {children}
+      </body>
     </html>
   );
 }

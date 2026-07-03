@@ -57,7 +57,7 @@ export default function JobBoard({ jobs }: { jobs: JobRow[] }) {
   ];
 
   return (
-    <section className="panel">
+    <section className="panel" data-reveal>
       <h2>🎯 משרות</h2>
       <div className="toolbar">
         <input
