@@ -266,6 +266,15 @@ html.js [data-reveal].in { opacity: 1; transform: none; filter: none; }
 .kit-body li { margin: 3px 0; }
 .kit-body b { color: var(--text); }
 
+/* tailored-CV changes callout */
+.kit-body.changes {
+  background: rgba(78, 240, 168, 0.05);
+  border: 1px solid rgba(78, 240, 168, 0.2);
+  border-radius: var(--radius-s);
+  padding: 14px 18px;
+  margin-bottom: 16px;
+}
+
 /* ── login ── */
 .login-wrap { min-height: 100dvh; display: grid; place-items: center; padding: 20px; position: relative; z-index: 2; }
 .login {

@@ -36,6 +36,32 @@ export async function generateApplyKit(url: string): Promise<void> {
   revalidatePath(`/job/${toId(url)}`);
 }
 
+export async function uploadCv(
+  _prev: { ok?: boolean; error?: string },
+  formData: FormData,
+): Promise<{ ok?: boolean; error?: string }> {
+  const file = formData.get("cv");
+  if (!(file instanceof File) || file.size === 0) return { error: "לא נבחר קובץ" };
+  if (file.size > 200_000) return { error: "קובץ גדול מדי (מקסימום 200KB)" };
+  if (!/\.(md|txt)$/i.test(file.name)) return { error: "רק קובצי טקסט: .md או .txt" };
+  const text = await file.text();
+  if (text.trim().length < 100) return { error: "הקובץ קצר מדי בשביל קורות חיים" };
+  const { saveCv } = await import("@/lib/db");
+  await saveCv(text);
+  revalidatePath("/");
+  return { ok: true };
+}
+
+export async function generateTailoredCv(url: string): Promise<void> {
+  const { getJob, saveTailoredCv } = await import("@/lib/db");
+  const { tailorCv } = await import("@/lib/claude");
+  const job = await getJob(url);
+  if (!job) throw new Error("job not found");
+  await saveTailoredCv(url, await tailorCv(job));
+  const { toId } = await import("@/lib/id");
+  revalidatePath(`/job/${toId(url)}`);
+}
+
 export async function setStatus(url: string, status: string | null) {
   const { error } = await supabase()
     .from("jobs")

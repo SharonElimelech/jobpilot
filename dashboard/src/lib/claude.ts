@@ -1,7 +1,7 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import type { JobRow } from "./db.js";
+import { getCv, type JobRow } from "./db";
 
 let client: Anthropic | null = null;
 function anthropic(): Anthropic {
@@ -9,9 +9,48 @@ function anthropic(): Anthropic {
   return client;
 }
 
-// ponytail: cv.md duplicated from repo root (dashboard deploys alone) — update both on CV change
-function cv(): string {
-  return readFileSync(join(process.cwd(), "cv.md"), "utf8");
+// uploaded CV (Supabase Storage) wins; bundled cv.md is the fallback
+async function cv(): Promise<string> {
+  return (await getCv()) ?? readFileSync(join(process.cwd(), "cv.md"), "utf8");
+}
+
+export async function tailorCv(job: JobRow & { description?: string }): Promise<string> {
+  const response = await anthropic().messages.create({
+    model: "claude-opus-4-8",
+    max_tokens: 6000,
+    system: `You tailor one specific candidate's CV to a specific job posting.
+
+STRICT HONESTY RULES — violating any of these makes the output worthless:
+- You may ONLY reorder sections, rephrase existing content, and emphasize genuinely relevant items.
+- You may align terminology with the posting's keywords ONLY when the CV truly contains that skill/experience.
+- NEVER invent skills, tools, experience, employers, dates, titles, or metrics that are not in the original CV.
+- If the posting requires something the candidate lacks — do NOT claim it. Leave the gap.
+- Every change must be traceable to the original CV.
+
+Candidate's original CV:
+
+${await cv()}`,
+    messages: [{
+      role: "user",
+      content: `Tailor the CV to this posting. Output exactly this markdown structure:
+
+## מה שונה
+Bullet list in Hebrew. Each bullet: what was changed + one-line why. Only real changes (reordering, rephrasing, emphasis). If a section was left untouched, don't mention it.
+
+---
+
+Then the complete tailored CV in English, clean markdown, ATS-friendly (no tables, standard section headers).
+
+Job posting:
+Title: ${job.title}
+Company: ${job.company}
+Description:
+${job.description?.slice(0, 8000) ?? ""}`,
+    }],
+  });
+  const text = response.content.find((b) => b.type === "text");
+  if (!text || text.type !== "text") throw new Error("no text in tailor response");
+  return text.text;
 }
 
 export async function generateKit(job: JobRow): Promise<string> {
@@ -21,7 +60,7 @@ export async function generateKit(job: JobRow): Promise<string> {
     system: `You are an expert Israeli tech career coach and CV writer. You help one specific candidate.
 Candidate CV:
 
-${cv()}
+${await cv()}
 
 Write in the language of the job posting (Hebrew posting → Hebrew, English posting → English). CV content itself always in English (Israeli tech standard). Be concrete, no fluff, no invented experience — only reframe what the CV actually contains.`,
     messages: [{

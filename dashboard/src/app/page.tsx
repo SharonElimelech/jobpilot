@@ -1,13 +1,14 @@
-import { getJobs } from "@/lib/db";
+import { getJobs, getCv } from "@/lib/db";
 import JobBoard from "@/components/JobBoard";
 import SkillRadar from "@/components/SkillRadar";
+import CvUpload from "@/components/CvUpload";
 
 export const dynamic = "force-dynamic";
 
 const DAY = 86_400_000;
 
 export default async function Home() {
-  const jobs = await getJobs();
+  const [jobs, cvUploaded] = await Promise.all([getJobs(), getCv()]);
   const now = Date.now();
 
   const newWeek = jobs.filter((j) => now - new Date(j.first_seen).getTime() < 7 * DAY).length;
@@ -34,6 +35,7 @@ export default async function Home() {
 
       <JobBoard jobs={jobs} />
       <SkillRadar jobs={jobs} />
+      <CvUpload hasCv={cvUploaded !== null} />
     </main>
   );
 }

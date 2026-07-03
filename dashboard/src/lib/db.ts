@@ -44,6 +44,33 @@ export async function saveKit(url: string, kitMd: string): Promise<void> {
   if (error) throw new Error(error.message);
 }
 
+// ── CV storage (Supabase Storage bucket, no schema changes needed) ──
+const CV_BUCKET = "cv";
+
+async function ensureBucket(): Promise<void> {
+  // idempotent; errors if exists — ignored
+  await supabase().storage.createBucket(CV_BUCKET, { public: false }).catch(() => {});
+}
+
+async function readText(path: string): Promise<string | null> {
+  const { data, error } = await supabase().storage.from(CV_BUCKET).download(path);
+  if (error || !data) return null;
+  return data.text();
+}
+
+async function writeText(path: string, content: string): Promise<void> {
+  await ensureBucket();
+  const { error } = await supabase().storage.from(CV_BUCKET).upload(path, new Blob([content], { type: "text/markdown" }), { upsert: true });
+  if (error) throw new Error(error.message);
+}
+
+export const getCv = () => readText("profile.md");
+export const saveCv = (md: string) => writeText("profile.md", md);
+
+const tailoredPath = (url: string) => `tailored/${Buffer.from(url).toString("base64url")}.md`;
+export const getTailoredCv = (url: string) => readText(tailoredPath(url));
+export const saveTailoredCv = (url: string, md: string) => writeText(tailoredPath(url), md);
+
 export async function getJobs(): Promise<JobRow[]> {
   const { data, error } = await supabase()
     .from("jobs")

@@ -1,9 +1,17 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getJob, getKit } from "@/lib/db";
+import { getJob, getKit, getTailoredCv } from "@/lib/db";
 import { fromId } from "@/lib/id";
 import { mdToHtml } from "@/lib/md";
 import KitPanel from "@/components/KitPanel";
+import TailorPanel from "@/components/TailorPanel";
+
+// stored format: "## מה שונה ... \n---\n ... cv markdown"
+function splitTailored(md: string): { changes: string; cv: string } {
+  const i = md.indexOf("\n---");
+  if (i === -1) return { changes: "", cv: md };
+  return { changes: md.slice(0, i), cv: md.slice(md.indexOf("\n", i + 2) + 1) };
+}
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60; // kit generation server action can take ~30s
@@ -13,7 +21,8 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
   const url = fromId(id);
   const job = await getJob(url);
   if (!job) notFound();
-  const kitMd = await getKit(url);
+  const [kitMd, tailoredMd] = await Promise.all([getKit(url), getTailoredCv(url)]);
+  const tailored = tailoredMd ? splitTailored(tailoredMd) : null;
 
   return (
     <main>
@@ -46,6 +55,14 @@ export default async function JobPage({ params }: { params: Promise<{ id: string
           <p className="why miss">חסר: {job.missing_skills.join(", ")}</p>
         )}
       </section>
+
+      <TailorPanel
+        url={url}
+        company={job.company}
+        cvMd={tailored?.cv ?? null}
+        changesHtml={tailored?.changes ? mdToHtml(tailored.changes) : null}
+        cvHtml={tailored ? mdToHtml(tailored.cv) : null}
+      />
 
       <KitPanel url={url} kitMd={kitMd} kitHtml={kitMd ? mdToHtml(kitMd) : null} />
 
